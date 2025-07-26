@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor Python</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Editor Python</h2>
+    <textarea id="codigo" rows="10" cols="50">print("Olá, mundo!")</textarea><br>
+    <button class="btn" onclick="executar()">Executar</button>
+    <pre id="saida"></pre>
+  </div>
+
+  <!-- Skulpt CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt-stdlib.js"></script>
+  <script>
+    function builtinRead(x) {
+      if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
+        throw "Arquivo não encontrado: '" + x + "'";
+      }
+      return Sk.builtinFiles["files"][x];
+    }
+
+    function outf(texto) {
+      document.getElementById("saida").innerText += texto;
+    }
+
+    function executar() {
+      let prog = document.getElementById("codigo").value;
+      document.getElementById("saida").innerText = "";
+      Sk.configure({ output: outf, read: builtinRead });
+
+      Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, prog))
+        .catch(function(err) {
+          document.getElementById("saida").innerText = err.toString();
+        });
+    }
+  </script>
+</body>
+</html>
