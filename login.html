@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Login - Kodland Clone</title>
+  <title>Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="login-container">
+  <div class="container">
     <h2>Login</h2>
-    <input type="text" id="usuario" placeholder="Usuário">
-    <input type="password" id="senha" placeholder="Senha">
-    <button onclick="fazerLogin()">Entrar</button>
-    <p id="mensagem-erro" class="erro"></p>
-  </main>
-  <script src="script.js"></script>
+    <input type="text" placeholder="Usuário" id="usuario">
+    <input type="password" placeholder="Senha" id="senha">
+    <button class="btn" onclick="login()">Entrar</button>
+  </div>
+  <script>
+    function login() {
+      alert("Login simulado com sucesso!");
+      window.location.href = "cursos.html";
+    }
+  </script>
 </body>
 </html>
