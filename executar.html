@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Executar Código Python</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt-stdlib.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Executar Código Python</h1>
+    <a href="index.html" class="btn">Voltar</a>
+  </header>
+
+  <main>
+    <textarea id="codigo" rows="8" cols="60">print("Olá, mundo!")</textarea><br><br>
+    <button onclick="executar()">Executar</button>
+    <pre id="saida"></pre>
+  </main>
+
+  <script>
+    function builtinRead(x) {
+      if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+        throw "Arquivo não encontrado: '" + x + "'";
+      return Sk.builtinFiles["files"][x];
+    }
+
+    function executar() {
+      const saida = document.getElementById("saida");
+      saida.textContent = "";
+      const codigo = document.getElementById("codigo").value;
+      Sk.configure({
+        output: texto => saida.textContent += texto,
+        read: builtinRead
+      });
+      Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, codigo))
+        .catch(err => saida.textContent += "\nErro: " + err.toString());
+    }
+  </script>
+</body>
+</html>
