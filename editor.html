@@ -4,18 +4,23 @@
   <meta charset="UTF-8">
   <title>Editor Python</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt-stdlib.js"></script>
 </head>
 <body>
   <div class="container">
-    <h2>Editor Python</h2>
-    <textarea id="codigo" rows="10" cols="50">print("Olá, mundo!")</textarea><br>
-    <button class="btn" onclick="executar()">Executar</button>
+    <h2>Editor de Código Python</h2>
+    
+    <textarea id="codigo" rows="10" placeholder="Digite seu código Python aqui...">print("Olá, mundo!")</textarea>
+    
+    <button onclick="executarCodigo()" class="btn">Executar</button>
+    
     <pre id="saida"></pre>
+    
+    <br>
+    <a href="cursos.html">← Voltar aos cursos</a>
   </div>
 
-  <!-- Skulpt CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/skulpt-stdlib.js"></script>
   <script>
     function builtinRead(x) {
       if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
@@ -24,19 +29,16 @@
       return Sk.builtinFiles["files"][x];
     }
 
-    function outf(texto) {
-      document.getElementById("saida").innerText += texto;
-    }
+    function executarCodigo() {
+      const saida = document.getElementById("saida");
+      saida.innerHTML = '';
+      Sk.pre = "saida";
+      Sk.configure({ output: (texto) => saida.innerHTML += texto, read: builtinRead });
 
-    function executar() {
-      let prog = document.getElementById("codigo").value;
-      document.getElementById("saida").innerText = "";
-      Sk.configure({ output: outf, read: builtinRead });
+      const codigo = document.getElementById("codigo").value;
 
-      Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, prog))
-        .catch(function(err) {
-          document.getElementById("saida").innerText = err.toString();
-        });
+      Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, codigo))
+        .catch((err) => saida.innerHTML = err.toString());
     }
   </script>
 </body>
